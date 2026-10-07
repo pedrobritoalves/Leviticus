@@ -14,6 +14,11 @@ Sistema de administração e cuidado eclesiástico orientado pelo Blueprint O.S.
 
 Este incremento NÃO é o sistema completo. Família, fotografia, anexos, gestão de usuários por interface, aconselhamento detalhado, EBD, agenda, secretaria e assinaturas ainda serão implementados. A lista de dados pessoais cresce somente conforme finalidade e necessidade.
 
+## Construção e testes
+
+- [Task list completa: Web, Android, iOS e produto](docs/TASK-LIST.md)
+- [Guia para testar como desenvolvedor](docs/TESTAR-COMO-DESENVOLVEDOR.md)
+
 ## Executar
 
 Ver [docs/EXECUTAR.md](docs/EXECUTAR.md). Ver resultados e limitações em [docs/VALIDACAO.md](docs/VALIDACAO.md).
