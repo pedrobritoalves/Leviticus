@@ -1,4 +1,6 @@
 import 'prayer_page.dart';
+import 'event_page.dart';
+import 'event_repository.dart';
 import 'prayer_repository.dart';
 
 import 'package:flutter/material.dart';
@@ -267,6 +269,23 @@ class _WorkspaceState extends State<Workspace> {
             tooltip: 'Atualizar',
             icon: const Icon(Icons.refresh),
           ),
+          if (widget.repository is EventRepository)
+            IconButton(
+              onPressed: loading || error.isNotEmpty
+                  ? null
+                  : () => Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (_) => EventPage(
+                          repository: widget.repository as EventRepository,
+                          people: people,
+                          demo: widget.demo,
+                        ),
+                      ),
+                    ),
+              tooltip: 'Agenda institucional',
+              icon: const Icon(Icons.calendar_month_outlined),
+            ),
           if (widget.allowPrayer && widget.repository is PrayerRepository)
             IconButton(
               onPressed: () => Navigator.push(

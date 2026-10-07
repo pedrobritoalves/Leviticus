@@ -37,3 +37,13 @@ Um resultado de compilação não substitui a validação do login e do App Chec
 ### Confirmação remota da integração
 
 A execução [37614379172](https://github.com/pedrobritoalves/Leviticus/actions/runs/37614379172), commit `c81dc5d0eb59bd6ac42380442bf29b43d43f0bef`, concluiu backend e Flutter com sucesso. O job backend executou também os testes E2E Auth → Functions → Firestore com a CLI atualizada e Java 21. O bloqueio de socket do ambiente local não impediu a execução no runner do GitHub. Isso valida emulação integrada, não credenciais Google, App Check real ou deploy em nuvem.
+
+## Agenda institucional — 07/10/2026
+
+Revisão construída sobre `880d286`. O CI dessa base concluiu com sucesso: [37616450427](https://github.com/pedrobritoalves/Leviticus/actions/runs/37616450427). O workflow de deploy [37616451209](https://github.com/pedrobritoalves/Leviticus/actions/runs/37616451209) foi ignorado; nenhuma implantação foi comprovada.
+
+- 38 testes de domínio aprovados localmente: 33 anteriores e 5 novos de agenda (datas UTC/intervalos, isolamento, responsável, revogação, concorrência e idempotência).
+- 5 testes de configuração de deploy aprovados; sintaxe do backend verificada.
+- `flutter analyze`: nenhum problema; 7 testes Flutter aprovados, incluindo datas e jornada de criação/edição/cancelamento da agenda.
+- Novo caso E2E de agenda incluído no CI com Auth, Functions e Firestore. O resultado remoto desta revisão deve ser consultado em Actions; não se confunde com a execução aprovada da base.
+- Firebase real, App Check/reCAPTCHA, primeiro deploy, Android e iOS continuam sem homologação. A agenda é institucional, restrita a administrador/secretaria/pastor; não inclui recorrência, reserva de salas, notificações nem visibilidade por ministério/membro.

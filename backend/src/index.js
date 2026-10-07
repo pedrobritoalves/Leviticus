@@ -2,7 +2,7 @@ import { prayerService } from "./prayer_service.js";
 import { initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import { onCall, HttpsError } from "firebase-functions/v2/https";
-import { service, ministriesService, Fault } from "./service.js";
+import { service, ministriesService, eventsService, Fault } from "./service.js";
 import { firestoreStore } from "./firestore_store.js";
 initializeApp();
 const store = firestoreStore(getFirestore());
@@ -34,6 +34,10 @@ export const savePerson = handler(people, "save");
 export const listPeople = handler(people, "list");
 export const saveMinistry = handler(ministries, "save");
 export const listMinistries = handler(ministries, "list");
+
+const events = eventsService(store);
+export const saveEvent = handler(events, "save");
+export const listEvents = handler(events, "list");
 
 const prayers = prayerService(store);
 export const submitPrayer = handler(prayers, "submit");

@@ -120,3 +120,39 @@ export function ministry(input) {
     active: input.active,
   };
 }
+
+function instant(value, label) {
+  if (
+    typeof value !== "string" ||
+    !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/.test(value)
+  )
+    invalid(`${label} deve conter data e hora UTC.`);
+  const parsed = new Date(value);
+  const canonical = value.includes(".") ? value : value.replace("Z", ".000Z");
+  if (!Number.isFinite(parsed.getTime()) || parsed.toISOString() !== canonical)
+    invalid(`${label} inválido.`);
+  return parsed.toISOString();
+}
+export function calendarEvent(input) {
+  object(input, [
+    "title",
+    "location",
+    "startsAt",
+    "endsAt",
+    "organizerId",
+    "status",
+  ]);
+  const startsAt = instant(input.startsAt, "Início"),
+    endsAt = instant(input.endsAt, "Término");
+  if (endsAt <= startsAt) invalid("Término deve ser posterior ao início.");
+  if (!["scheduled", "cancelled"].includes(input.status))
+    invalid("Situação do evento inválida.");
+  return {
+    title: text(input.title, 160, "título", true),
+    location: text(input.location, 180, "local"),
+    startsAt,
+    endsAt,
+    organizerId: input.organizerId ? identifier(input.organizerId) : "",
+    status: input.status,
+  };
+}

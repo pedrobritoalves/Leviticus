@@ -1,4 +1,5 @@
 import 'prayer_repository.dart';
+import 'event_repository.dart';
 import 'prayer_page.dart';
 
 import 'package:flutter/material.dart';
@@ -57,7 +58,22 @@ Future<void> main() async {
   }
 }
 
-class FirebaseChurchRepository implements ChurchRepository, PrayerRepository {
+class FirebaseChurchRepository
+    implements ChurchRepository, PrayerRepository, EventRepository {
+  @override
+  Future<List<ChurchEvent>> listEvents() async =>
+      (await list('listEvents')).map(ChurchEvent.fromMap).toList();
+  @override
+  Future<void> saveEvent(ChurchEvent e, String requestId) async {
+    await functions.httpsCallable('saveEvent').call({
+      'churchId': churchId,
+      'eventId': e.id,
+      'requestId': requestId,
+      'expectedVersion': e.version,
+      'event': e.values,
+    });
+  }
+
   @override
   String get currentUid => FirebaseAuth.instance.currentUser!.uid;
   @override

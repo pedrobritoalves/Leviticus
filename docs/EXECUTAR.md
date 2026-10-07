@@ -80,3 +80,7 @@ flutter build web --release -t lib/firebase_main.dart --dart-define-from-file=co
 ```
 
 Não execute deploy sobre um banco compartilhado sem avaliar as regras: este incremento nega todo acesso direto e usa funções para ler e gravar. O arquivo `.firebaserc` registra o destino informado, mas não dá credenciais nem autoriza mudanças em recursos existentes.
+
+## Agenda institucional
+
+Abra o ícone de calendário **Agenda institucional**, crie um evento e teste edição/cancelamento. O roteiro T21 em `TESTAR-COMO-DESENVOLVEDOR.md` detalha o aceite. As funções `saveEvent`/`listEvents` usam os mesmos emuladores/configuração da aplicação. A demo mantém eventos somente em memória.

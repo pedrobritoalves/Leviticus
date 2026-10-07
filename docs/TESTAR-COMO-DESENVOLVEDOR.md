@@ -294,3 +294,16 @@ Considere bloqueio de release: acesso entre igrejas, exposição pastoral indevi
 - [ ] Confirmei a versão candidata e as limitações antes da apresentação.
 
 Referências técnicas e dependências estão no final da [TASK-LIST.md](TASK-LIST.md). Os comandos foram conferidos contra os arquivos do repositório; nesta tarefa documental eles não representam novas execuções nem novos testes aprovados.
+
+## T21 — agenda institucional (incremento disponível)
+
+Na demo, entre pelo ícone **Agenda institucional** na barra superior. Na entrada conectada, use administrador, secretaria ou pastor com vínculo ativo e e-mail confirmado.
+
+1. Cadastre uma pessoa e crie um evento futuro com título, local, responsável e início/término. O horário exibido usa o fuso do dispositivo; a gravação usa UTC.
+2. Tente término anterior ao início: deve impedir gravação. Corrija, salve e pesquise pelo título.
+3. Abra o evento, altere o local e salve. Na versão conectada, recarregue e confira persistência; na demo os dados desaparecem ao recarregar.
+4. Altere a situação para **Cancelado**. Deve aparecer em **Cancelados** e desaparecer de **Próximos**, sem exclusão do registro.
+5. Na versão conectada, edite o mesmo evento em duas sessões. A segunda gravação com versão antiga deve falhar e orientar atualização.
+6. Membro, consultor e usuário de outra igreja não devem conseguir listar nem gravar pela API. O backend verifica isso mesmo sem depender de menus ocultos.
+
+T14 continua pendente: reservas/conflitos de salas e avisos aos participantes não fazem parte desta entrega. Não registre conteúdo de aconselhamento na agenda institucional.

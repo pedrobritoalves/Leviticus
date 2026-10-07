@@ -1,6 +1,6 @@
 # Leviticus — task list de construção e liberação
 
-Atualização: 07/10/2026. Marco: apresentação em 13/10/2026. Base inspecionada: commit `dcc483e11304cce5962258c10c793e1246fcacaf`.
+Atualização: 07/10/2026. Marco: apresentação em 13/10/2026. Base remota inspecionada: `880d28660aab21f14fc96626f7da7d7e5dcbfbea`; incremento de agenda nesta revisão.
 
 Este documento acompanha o código e o Blueprint O.S. Shepherd v1.0, especialmente os capítulos 4–13. Inclui o escopo adicional solicitado: secretaria, EBD, voluntariado, assinatura de documentos e oferta em parceria com consultoria. É um backlog de execução; caixas abertas não significam funcionalidades disponíveis.
 
@@ -10,15 +10,16 @@ Este documento acompanha o código e o Blueprint O.S. Shepherd v1.0, especialmen
 |---|---|---|
 | Repositório | Código na `main`, escrita confirmada | Consolidar CI, fluxo de revisão e releases |
 | Web demonstrativo | Compilação release e testes de interface | Dados são fictícios, apenas em memória |
-| Web conectado | Entrada Firebase compila com configuração de emuladores | Fluxo Auth → Functions → Firestore não homologado; sem implantação |
+| Web conectado | Entrada Firebase compila com configuração de emuladores | Fluxo Auth → Functions → Firestore aprovado nos emuladores do CI; implantação real pendente |
 | Pessoas e ministérios | Cadastro/edição básicos, busca, participantes e responsável | Completar cadastro, usuários, histórico, escala e validação integrada |
 | Oração | Autor e pastor designado; acompanhamento básico | Homologação conectada; demais rotinas pastorais |
 | Permissões | Verificação no backend por igreja, papel e vínculo ativo | Administração de usuários, escopos granulares e testes completos |
 | Android | Código Dart compartilhável | `app/android` ainda não existe; configuração e build nativo pendentes |
 | iOS | Código Dart compartilhável | `app/ios` ainda não existe; macOS/Xcode, configuração e assinatura pendentes |
 | Firebase real | ID conhecido: `leviticus-app-c5110` | Serviços, dados, IAM, faturamento e configurações ainda não inspecionados |
-| Qualidade | 41 casos locais; jobs backend e Flutter do CI aprovados em 07/10 | E2E Auth/Functions, dispositivos reais e nuvem ainda não comprovados |
-| Demais módulos | Planejados no blueprint | Agenda, secretaria, EBD, assinaturas, discipulado, indicadores e IA ainda não implementados |
+| Qualidade | CI da base `880d286` aprovado, incluindo E2E Auth/Functions; agenda acrescenta cobertura | Nova revisão deve passar no CI; dispositivos reais e nuvem pendentes |
+| Agenda institucional | Criação, edição, responsável, horários, busca e cancelamento implementados nesta revisão | Homologação real; agenda pastoral/ministerial, reservas e recorrência pendentes |
+| Demais módulos | Planejados no blueprint | Secretaria, EBD, assinaturas, discipulado, indicadores e IA ainda não implementados |
 
 A compilação Web não comprova execução Android/iOS. A configuração atual em `firebase_main.dart` usa opções recebidas por variáveis, exige chave reCAPTCHA fora de emuladores e fixa `localhost` para emulação. Esses pontos precisam de adaptação por plataforma. `CHURCH_ID` também é fixado na compilação; a seleção de igreja ainda não existe. As listas carregam todas as páginas; não há sincronização offline nem tempo real implementados.
 
@@ -58,7 +59,7 @@ Responsáveis: ENG + PEDRO. Saída: clone limpo reproduz a demonstração e as v
 - [ ] DEV-04 — Rodar a demo Web e completar os casos manuais T01–T04 do guia.
 - [x] BASE-02 — Homologada emulação com Firebase CLI 15.32.1, SDK Functions e Node 22/Java 21 no CI 37614379172; validação de deploy Google ainda pendente.
 - [x] BASE-03 — E2E Auth → Functions → Firestore incluído no CI e aprovado na execução 37614379172. Não substitui a validação na nuvem.
-- [x] BASE-04 — CI verde: backend Node 22, integração Firestore, análise/testes Flutter e dois builds Web. Evidência: [execução 37611939852](https://github.com/pedrobritoalves/Leviticus/actions/runs/37611939852), jobs backend e Flutter concluídos com sucesso em 07/10/2026. E2E Auth/Functions ainda não integra esse workflow.
+- [x] BASE-04 — CI da base aprovado: backend Node 22, integração Firestore, E2E Auth/Functions, análise/testes Flutter e dois builds Web. Evidência: [execução 37616450427](https://github.com/pedrobritoalves/Leviticus/actions/runs/37616450427), commit `880d286`. Cada incremento deve repetir o CI.
 - [ ] BASE-05 — Acrescentar jobs Android e iOS/macOS após criar os projetos nativos; separar compilação sem assinatura de distribuição assinada.
 - [ ] BASE-06 — Criar configuração explícita de desenvolvimento, homologação e produção; identificar ambiente na tela e impedir release com placeholders ou emuladores.
 - [ ] BASE-07 — Criar dados fictícios reproduzíveis de duas igrejas e contas para cada papel; ampliar o seed com admin, segundo membro, segundo pastor e usuário inativo.
@@ -77,7 +78,7 @@ Responsáveis: ENG; PEDRO para acesso administrativo e faturamento. Depende de B
 - [ ] CLOUD-07 — Registrar apps Web, Android e iOS no ambiente correspondente; gerar configuração por plataforma com FlutterFire e revisar alterações nos arquivos existentes.
 - [ ] CLOUD-08 — Configurar App Check por app/domínio e builds de teste. O backend já exige App Check fora do emulador; validar cliente legítimo e requisição sem atestado antes de liberar acesso.
 - [ ] CLOUD-09 — Provisionar igreja, primeiro administrador, pastor de acolhimento e vínculos ativos por operação administrativa confiável. O seed atual serve somente a emuladores.
-- [ ] CLOUD-10 — Publicar as oito funções atuais em homologação; conferir região, autenticação, App Check, permissões de serviço, logs e tratamento de erros.
+- [ ] CLOUD-10 — Publicar as dez funções atuais (incluindo `saveEvent` e `listEvents`) em homologação; conferir região, autenticação, App Check, permissões de serviço, logs e tratamento de erros.
 - [ ] CLOUD-11 — Aplicar regras e índices após avaliar o impacto nos recursos existentes; manter acesso direto negado enquanto as operações passarem por Functions. Criar índices conforme as consultas reais exigirem.
 - [ ] CLOUD-12 — Testar persistência após recarga, reinício e login em outro dispositivo; confirmar auditoria e negação entre igrejas. Produzir evidência do fluxo completo.
 - [ ] CLOUD-13 — Preparar implantação seletiva, verificação após deploy e rollback de aplicação/backend compatível com os dados; registrar versão em execução.
@@ -183,6 +184,8 @@ Aceite: pedido → atribuição → visita/atendimento → retorno → encerrame
 ### Agenda e eventos
 
 - [ ] AGE-01 — Implementar agendas institucional, pastoral e ministerial; evento, responsável, local, início/fim, fuso e visibilidade.
+- [x] AGE-01A — Implementar a primeira agenda institucional para administrador, secretaria e pastor: criar/editar/cancelar, responsável da mesma igreja, horários UTC com exibição local, busca e filtros; versões, idempotência e auditoria no servidor. Testes de domínio e interface; homologação em nuvem segue aberta em CLOUD-12.
+- [ ] AGE-01B — Completar agenda pastoral e ministerial com escopos próprios, visibilidade do membro e fuso configurável da igreja; não usar a agenda institucional para aconselhamento reservado.
 - [ ] AGE-02 — Implementar recorrência, exceções, cancelamento, reservas de salas/recursos e conflito de horários.
 - [ ] AGE-03 — Implementar inscrição, capacidade, presença/check-in e lembretes com preferências; integrar escala e EBD.
 - [ ] AGE-04 — Testar lembretes idempotentes, alteração de horário e privacidade do título/descrição em calendário compartilhado.
@@ -296,7 +299,7 @@ Há seis dias de calendário entre 07/10 e 13/10. A sequência abaixo é uma met
 
 | Data | Foco proposto | Evidência desejada |
 |---|---|---|
-| 07/10 | DEV, BASE, inventário Firebase e preparação de contas | Demo na máquina de Pedro, diagnóstico do E2E e ambiente de homologação definido |
+| 07/10 | BASE, agenda institucional, inventário Firebase e contas | CI existente aprovado; incremento da agenda verificado; acesso Google e ambiente de homologação ainda pendentes |
 | 08/10 | CLOUD, AUTH básico, WEB | URL conectada com pessoas, ministérios e oração persistentes |
 | 09/10 | MOBILE, Android e preparação iOS; início agenda | Núcleo no Android; compilação/execução inicial iOS se Mac e conta disponíveis |
 | 10/10 | Jornadas prioritárias de agenda, secretaria/EBD e pastorado | Incrementos completos por fluxo, com critérios de aceite |
@@ -313,7 +316,7 @@ Se a capacidade não comportar a sequência, preservar M1 e os testes de sigilo 
 - [ ] PEDRO-03 — Definir igreja fictícia de homologação, primeiro administrador, pastor de acolhimento e e-mails dos testadores.
 - [ ] PEDRO-04 — Definir nome público, identificadores dos apps e titular das contas Google/Apple.
 - [ ] PEDRO-05 — Fornecer modelos de documentos/termos revisados e contato responsável pelo aceite jurídico; selecionar provedor após proposta concreta.
-- [ ] PEDRO-06 — Aprovar prioridades do piloto e executar o guia de testes a cada incremento; registrar defeitos pelos IDs T01–T20.
+- [ ] PEDRO-06 — Aprovar prioridades do piloto e executar o guia de testes a cada incremento; registrar defeitos pelos IDs T01–T21.
 
 ## 19. Fontes e rastreabilidade
 
@@ -327,3 +330,11 @@ Se a capacidade não comportar a sequência, preservar M1 e os testes de sigilo 
 - [Distribuir Android](https://docs.flutter.dev/deployment/android).
 
 As fontes técnicas foram consultadas em 07/10/2026. Revalidar requisitos de lojas e ferramentas no momento da publicação. Este documento não comprova configuração de serviços que ainda não foram inspecionados.
+
+## 20. Próxima sequência após esta revisão
+
+1. Concluir o acesso Google no navegador para inspecionar o Firebase; a tela de login está acessível, mas a sessão administrativa ainda não foi confirmada. Autorização do usuário já recebida.
+2. Seguir CLOUD-01–09 e o [guia de primeiro deploy](PRIMEIRO-DEPLOY.md): serviços, aplicação Web, App Check e primeira igreja fictícia. Não há confirmação do registro reCAPTCHA.
+3. Configurar OIDC e variáveis do ambiente GitHub `staging`, executar o pipeline e conferir URL/versão/persistência. O último workflow de deploy foi ignorado; isso não equivale a implantação.
+4. Executar T01–T13 e T21 na versão conectada; corrigir falhas antes de inserir dados reais.
+5. Avançar secretaria/EBD e permissões conforme os itens P1; em paralelo de planejamento, preparar equipamentos/identificadores para MOBILE, AND e IOS. O código atual ainda não inclui projetos nativos.

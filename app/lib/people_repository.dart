@@ -1,4 +1,5 @@
 import 'prayer_repository.dart';
+import 'event_repository.dart';
 
 import 'dart:math';
 
@@ -104,7 +105,36 @@ abstract class ChurchRepository {
   Future<void> saveMinistry(Ministry ministry, String requestId);
 }
 
-class DemoChurchRepository implements ChurchRepository, PrayerRepository {
+class DemoChurchRepository
+    implements ChurchRepository, PrayerRepository, EventRepository {
+  final _events = <ChurchEvent>[];
+  @override
+  Future<List<ChurchEvent>> listEvents() async => List.of(_events);
+  @override
+  Future<void> saveEvent(ChurchEvent e, String requestId) async {
+    if (_receipts.containsKey(requestId)) return;
+    final i = _events.indexWhere((x) => x.id == e.id);
+    if ((i < 0 ? 0 : _events[i].version) != e.version) {
+      throw StateError('Atualize a agenda.');
+    }
+    if (!e.endsAt.isAfter(e.startsAt)) throw StateError('Intervalo inválido.');
+    if (e.organizerId.isNotEmpty &&
+        !_people.any((p) => p.id == e.organizerId)) {
+      throw StateError('Responsável indisponível.');
+    }
+    final saved = ChurchEvent.fromMap({
+      ...e.values,
+      'id': e.id,
+      'version': e.version + 1,
+    });
+    if (i < 0) {
+      _events.add(saved);
+    } else {
+      _events[i] = saved;
+    }
+    _receipts[requestId] = e.id;
+  }
+
   final _prayers = <Prayer>[];
   @override
   String get currentUid => 'demo-pastor';

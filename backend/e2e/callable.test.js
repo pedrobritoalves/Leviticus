@@ -93,3 +93,61 @@ test("callable rejeita anônimo, consultor e outra igreja", async () => {
     assert.equal(response.status, expected);
   }
 });
+
+test("agenda por callable persiste, cancela e nega acesso indevido", async () => {
+  // Create our own person: this case does not depend on a previous test's record.
+  const person = await call(
+    "savePerson",
+    {
+      churchId: "e2e-church",
+      personId: "agenda-person",
+      requestId: "agenda-person-create",
+      expectedVersion: 0,
+      person: { name: "Responsável agenda", status: "member" },
+    },
+    token,
+  );
+  assert.equal(person.status, 200);
+  const event = {
+    title: "Evento E2E",
+    location: "Sede",
+    startsAt: "2026-10-13T18:00:00Z",
+    endsAt: "2026-10-13T19:00:00Z",
+    organizerId: "agenda-person",
+    status: "scheduled",
+  };
+  const input = {
+    churchId: "e2e-church",
+    eventId: "e2e-event",
+    requestId: "e2e-event-create",
+    expectedVersion: 0,
+    event,
+  };
+  const created = await call("saveEvent", input, token);
+  assert.equal(created.status, 200);
+  assert.equal((await created.json()).result.version, 1);
+  const cancelled = await call(
+    "saveEvent",
+    {
+      ...input,
+      requestId: "e2e-event-cancel",
+      expectedVersion: 1,
+      event: { ...event, status: "cancelled" },
+    },
+    token,
+  );
+  assert.equal(cancelled.status, 200);
+  const listed = await call("listEvents", { churchId: "e2e-church" }, token);
+  assert.equal(listed.status, 200);
+  assert.equal((await listed.json()).result.items[0].status, "cancelled");
+  assert.equal(
+    (await call("listEvents", { churchId: "e2e-church" }, consultantToken))
+      .status,
+    403,
+  );
+  assert.equal(
+    (await call("saveEvent", { ...input, churchId: "another-church" }, token))
+      .status,
+    403,
+  );
+});

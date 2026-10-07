@@ -7,12 +7,13 @@ Sistema de administração e cuidado eclesiástico orientado pelo Blueprint O.S.
 - **Pessoas:** cadastro e edição com nome, nome preferido, contatos, nascimento, congregação, admissão, batismo e endereço; busca e filtro por vínculo.
 - **Ministérios:** cadastro, edição, situação, participantes e responsável, usando as pessoas da mesma igreja.
 - **Oração e acompanhamento:** pedido reservado ao autor e ao pastor de acolhimento; situação, próximo contato e proteção por vínculo, sem acesso administrativo automático.
+- **Agenda institucional:** criar, editar e cancelar eventos, definir responsável/local/horário, buscar e filtrar; acesso da equipe administrativa e pastoral autorizado por igreja.
 - **Autenticação:** integração Firebase Auth, confirmação de e-mail, recuperação de acesso e encerramento de sessão.
 - **Backend:** funções autenticadas, autorização por igreja, versionamento, idempotência e auditoria transacional.
 - **Segurança:** acesso direto ao Firestore/Storage negado; consultoria e papéis não implementados não recebem acesso aos cadastros.
 - **Demonstração:** entrada Flutter com dados fictícios em memória. A entrada Firebase é separada e persistente após configuração.
 
-Este incremento NÃO é o sistema completo. Família, fotografia, anexos, gestão de usuários por interface, aconselhamento detalhado, EBD, agenda, secretaria e assinaturas ainda serão implementados. A lista de dados pessoais cresce somente conforme finalidade e necessidade.
+Este incremento NÃO é o sistema completo. Família, fotografia, anexos, gestão de usuários por interface, aconselhamento detalhado, EBD, agenda pastoral/ministerial, reservas, secretaria e assinaturas ainda serão implementados. A lista de dados pessoais cresce somente conforme finalidade e necessidade.
 
 ## Construção e testes
 

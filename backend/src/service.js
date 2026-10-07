@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { Fault } from "./errors.js";
-import { identifier, person, ministry } from "./validation.js";
+import { identifier, person, ministry, calendarEvent } from "./validation.js";
 export { Fault, person };
 export const id = identifier;
 const fail = (code, message) => {
@@ -59,6 +59,15 @@ function resourceService(
                 "Participante não cadastrado nesta igreja.",
               );
         }
+        if (
+          collection === "events" &&
+          values.organizerId &&
+          !(await tx.record("people", values.organizerId))
+        )
+          fail(
+            "failed-precondition",
+            "Responsável não cadastrado nesta igreja.",
+          );
         const time = store.now();
         const record = {
           ...values,
@@ -119,4 +128,13 @@ export const ministriesService = (store) =>
     idField: "ministryId",
     valueField: "ministry",
     eventName: "Ministry",
+  });
+
+export const eventsService = (store) =>
+  resourceService(store, {
+    collection: "events",
+    validate: calendarEvent,
+    idField: "eventId",
+    valueField: "event",
+    eventName: "CalendarEvent",
   });

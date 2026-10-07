@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { service, ministriesService } from "../src/service.js";
+import { service, ministriesService, eventsService } from "../src/service.js";
 function fixture() {
   let state = {
     alpha: {
@@ -11,10 +11,18 @@ function fixture() {
       },
       people: {},
       ministries: {},
+      events: {},
       operations: {},
       audit: {},
     },
-    beta: { users: {}, people: {}, ministries: {}, operations: {}, audit: {} },
+    beta: {
+      users: {},
+      people: {},
+      ministries: {},
+      events: {},
+      operations: {},
+      audit: {},
+    },
   };
   let n = 0;
   const store = {
@@ -26,6 +34,7 @@ function fixture() {
           users: {},
           people: {},
           ministries: {},
+          events: {},
           operations: {},
           audit: {},
         },
@@ -56,6 +65,7 @@ function fixture() {
   return {
     api: service(store),
     ministries: ministriesService(store),
+    events: eventsService(store),
     state: () => state,
   };
 }
@@ -232,4 +242,109 @@ test("cadastro expandido persiste endereço e dados eclesiásticos", async () =>
   });
   assert.equal(p.address.city, "São Paulo");
   assert.equal(p.birthDate, "1990-02-01");
+});
+
+const eventInput = {
+  churchId: "alpha",
+  eventId: "event1",
+  requestId: "event-create",
+  expectedVersion: 0,
+  event: {
+    title: "Reunião de equipe",
+    location: "Sala 1",
+    startsAt: "2026-10-13T18:00:00Z",
+    endsAt: "2026-10-13T19:00:00Z",
+    organizerId: "",
+    status: "scheduled",
+  },
+};
+test("agenda cria, lista e cancela preservando histórico e idempotência", async () => {
+  const f = fixture();
+  const first = await f.events.save(user, eventInput);
+  assert.equal(first.startsAt, "2026-10-13T18:00:00.000Z");
+  assert.deepEqual(await f.events.save(user, eventInput), first);
+  assert.equal(Object.keys(f.state().alpha.audit).length, 1);
+  const cancelled = await f.events.save(user, {
+    ...eventInput,
+    requestId: "cancel",
+    expectedVersion: 1,
+    event: { ...eventInput.event, status: "cancelled" },
+  });
+  assert.equal(cancelled.version, 2);
+  assert.equal(cancelled.createdAt, first.createdAt);
+  assert.equal(
+    (await f.events.list(user, { churchId: "alpha" })).items[0].status,
+    "cancelled",
+  );
+  assert.equal(
+    JSON.stringify(f.state().alpha.audit).includes("Reunião"),
+    false,
+  );
+});
+test("agenda rejeita data inexistente, ausência de fuso, intervalo invertido e campo privado", async () => {
+  const f = fixture();
+  for (const delta of [
+    { startsAt: "2026-02-30T18:00:00Z" },
+    { startsAt: "2026-10-13T18:00:00" },
+    { endsAt: eventInput.event.startsAt },
+    { status: "unknown" },
+    { counseling: "reservado" },
+  ])
+    await assert.rejects(
+      f.events.save(user, {
+        ...eventInput,
+        event: { ...eventInput.event, ...delta },
+      }),
+      { code: "invalid-argument" },
+    );
+  assert.equal(Object.keys(f.state().alpha.events).length, 0);
+});
+test("agenda impede responsável de outra igreja e aceita pessoa local", async () => {
+  const f = fixture();
+  const request = {
+    ...eventInput,
+    event: { ...eventInput.event, organizerId: "p1" },
+  };
+  await assert.rejects(f.events.save(user, request), {
+    code: "failed-precondition",
+  });
+  await f.api.save(user, input);
+  assert.equal((await f.events.save(user, request)).organizerId, "p1");
+});
+test("agenda nega outra igreja, membro, consultoria e vínculo revogado", async () => {
+  const f = fixture();
+  f.state().alpha.users.member = { active: true, role: "member" };
+  for (const uid of ["member", "c"]) {
+    const auth = { uid, email_verified: true };
+    await assert.rejects(f.events.save(auth, eventInput), {
+      code: "permission-denied",
+    });
+    await assert.rejects(f.events.list(auth, { churchId: "alpha" }), {
+      code: "permission-denied",
+    });
+  }
+  await assert.rejects(f.events.list(user, { churchId: "beta" }), {
+    code: "permission-denied",
+  });
+  await f.events.save(user, eventInput);
+  f.state().alpha.users.u.active = false;
+  await assert.rejects(f.events.save(user, eventInput), {
+    code: "permission-denied",
+  });
+});
+test("agenda detecta conflito de edição e reutilização indevida de operação", async () => {
+  const f = fixture();
+  await f.events.save(user, eventInput);
+  await assert.rejects(
+    f.events.save(user, { ...eventInput, requestId: "edit-stale" }),
+    { code: "aborted" },
+  );
+  await assert.rejects(
+    f.events.save(user, {
+      ...eventInput,
+      event: { ...eventInput.event, title: "Outro título" },
+    }),
+    { code: "already-exists" },
+  );
+  assert.equal(f.state().alpha.events.event1.version, 1);
 });
