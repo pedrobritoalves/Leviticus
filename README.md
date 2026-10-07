@@ -16,6 +16,8 @@ Este incremento NÃO é o sistema completo. Família, fotografia, anexos, gestã
 
 ## Construção e testes
 
+- [Primeiro deploy: passo a passo para configurar as contas](docs/PRIMEIRO-DEPLOY.md)
+
 - [Task list completa: Web, Android, iOS e produto](docs/TASK-LIST.md)
 - [Guia para testar como desenvolvedor](docs/TESTAR-COMO-DESENVOLVEDOR.md)
 

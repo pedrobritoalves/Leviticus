@@ -33,3 +33,7 @@ Um resultado de compilação não substitui a validação do login e do App Chec
 - Pipeline de homologação preparado com OIDC, validação do destino, build conectado, deploy seletivo e conferência HTTP da versão. Credenciais/variáveis Google e primeiro deploy ainda pendentes.
 - Firebase CLI atualizada de 14.12.0 para 15.32.1; emuladores agora exigem Java 21. A versão inclui a correção oficial para Functions SDK v7.
 - 5 testes do validador de configuração e 33 testes backend passaram localmente (Node 24.19). O workflow usa Node 22 e Java 21 e agora inclui o E2E de Auth/Functions/Firestore. Conferir a execução remota desta revisão para registrar seu resultado.
+
+### Confirmação remota da integração
+
+A execução [37614379172](https://github.com/pedrobritoalves/Leviticus/actions/runs/37614379172), commit `c81dc5d0eb59bd6ac42380442bf29b43d43f0bef`, concluiu backend e Flutter com sucesso. O job backend executou também os testes E2E Auth → Functions → Firestore com a CLI atualizada e Java 21. O bloqueio de socket do ambiente local não impediu a execução no runner do GitHub. Isso valida emulação integrada, não credenciais Google, App Check real ou deploy em nuvem.

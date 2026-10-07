@@ -56,8 +56,8 @@ Responsáveis: ENG + PEDRO. Saída: clone limpo reproduz a demonstração e as v
 - [ ] DEV-02 — Clonar o repositório na máquina de Pedro; executar `npm ci` e `flutter pub get` a partir dos lockfiles.
 - [ ] DEV-03 — Instalar editor e extensões Flutter/Dart; preparar emulador Android e, no Mac, simulador iOS.
 - [ ] DEV-04 — Rodar a demo Web e completar os casos manuais T01–T04 do guia.
-- [ ] BASE-02 — Homologar Firebase CLI, SDK Functions e Node 22 em conjunto; resolver o aviso de compatibilidade da CLI antes do deploy.
-- [ ] BASE-03 — Executar os testes E2E Auth → Functions → Firestore em ambiente que permita sockets; incluir o comando no CI após estabilização.
+- [x] BASE-02 — Homologada emulação com Firebase CLI 15.32.1, SDK Functions e Node 22/Java 21 no CI 37614379172; validação de deploy Google ainda pendente.
+- [x] BASE-03 — E2E Auth → Functions → Firestore incluído no CI e aprovado na execução 37614379172. Não substitui a validação na nuvem.
 - [x] BASE-04 — CI verde: backend Node 22, integração Firestore, análise/testes Flutter e dois builds Web. Evidência: [execução 37611939852](https://github.com/pedrobritoalves/Leviticus/actions/runs/37611939852), jobs backend e Flutter concluídos com sucesso em 07/10/2026. E2E Auth/Functions ainda não integra esse workflow.
 - [ ] BASE-05 — Acrescentar jobs Android e iOS/macOS após criar os projetos nativos; separar compilação sem assinatura de distribuição assinada.
 - [ ] BASE-06 — Criar configuração explícita de desenvolvimento, homologação e produção; identificar ambiente na tela e impedir release com placeholders ou emuladores.

@@ -2,6 +2,8 @@
 
 Preparado em 07/10/2026. A integração de código está pronta para configuração; a autenticação no Google Cloud e o primeiro deploy ainda precisam ser executados no projeto de homologação.
 
+Comece pelo [roteiro guiado do primeiro deploy](PRIMEIRO-DEPLOY.md). Este documento contém os comandos administrativos detalhados.
+
 ## Resultado esperado
 
 `push na main → testes backend/Flutter/E2E → build Web conectado → credencial temporária Google → Functions/regras → Hosting → conferência da versão publicada`.
@@ -118,7 +120,7 @@ Em Settings → Actions → General, permitir os workflows e as actions utilizad
 6. Verifica `version.json` no Hosting e mostra URL/commit no resumo do job.
 7. Execute os testes T05–T13 de [TESTAR-COMO-DESENVOLVEDOR.md](TESTAR-COMO-DESENVOLVEDOR.md): login, persistência, troca de conta e sigilo. Verificação HTTP de versão não substitui teste da aplicação.
 
-Os testes E2E estão adicionados ao CI nesta alteração; verificar o resultado da primeira execução com a CLI atualizada. Não marcar deploy homologado enquanto houver teste falhando.
+Os testes E2E passaram na execução 37614379172, junto aos jobs backend e Flutter. O deploy Google continua pendente de configuração; teste em emulador não equivale à homologação da nuvem.
 
 ## 5. Automatizar os próximos incrementos
 
