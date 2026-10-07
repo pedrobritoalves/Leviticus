@@ -1,0 +1,8 @@
+rules_version = '2';
+service cloud.firestore {
+ match /databases/{database}/documents {
+  // All application access passes through authenticated, authorized callables.
+  // Admin SDK bypasses these rules: service.js enforces church membership.
+  match /{document=**} { allow read, write: if false; }
+ }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "Leviticus",
+  "short_name": "Leviticus",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f4f6fa",
+  "theme_color": "#163c5b",
+  "description": "Administração e cuidado eclesiástico.",
+  "orientation": "portrait-primary",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
