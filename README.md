@@ -19,6 +19,8 @@ Este incremento NÃO é o sistema completo. Família, fotografia, anexos, gestã
 - [Task list completa: Web, Android, iOS e produto](docs/TASK-LIST.md)
 - [Guia para testar como desenvolvedor](docs/TESTAR-COMO-DESENVOLVEDOR.md)
 
+- [Conectar Firebase ao GitHub e automatizar deploy](docs/CONECTAR-FIREBASE-GITHUB.md)
+
 ## Executar
 
 Ver [docs/EXECUTAR.md](docs/EXECUTAR.md). Ver resultados e limitações em [docs/VALIDACAO.md](docs/VALIDACAO.md).

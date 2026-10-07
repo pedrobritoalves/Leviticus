@@ -1,0 +1,80 @@
+name: Deploy Firebase staging
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: firebase-staging
+  cancel-in-progress: false
+jobs:
+  checks:
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'workflow_dispatch' || vars.AUTO_DEPLOY_STAGING == 'true')
+    uses: ./.github/workflows/ci.yml
+  deploy:
+    needs: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    environment: staging
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      STAGING_DEPLOY_ENABLED: ${{ vars.STAGING_DEPLOY_ENABLED }}
+      FIREBASE_PROJECT_ID: ${{ vars.FIREBASE_PROJECT_ID }}
+      FIREBASE_WEB_CONFIG_JSON: ${{ vars.FIREBASE_WEB_CONFIG_JSON }}
+      GCP_WORKLOAD_IDENTITY_PROVIDER: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+      GCP_DEPLOY_SERVICE_ACCOUNT: ${{ vars.GCP_DEPLOY_SERVICE_ACCOUNT }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - name: Validate destination and app configuration
+        run: node scripts/deploy-config.mjs
+      - run: npm ci
+        working-directory: backend
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.6'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+        working-directory: app
+      - name: Build connected Web app
+        run: flutter build web --release -t lib/firebase_main.dart --dart-define-from-file=config/firebase.local.json --no-web-resources-cdn
+        working-directory: app
+      - name: Record deployed revision
+        run: node -e 'require("node:fs").writeFileSync("app/build/web/version.json", JSON.stringify({commit:process.env.GITHUB_SHA}))'
+      - name: Authenticate with temporary Google credentials
+        uses: google-github-actions/auth@v3
+        with:
+          project_id: ${{ vars.FIREBASE_PROJECT_ID }}
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOY_SERVICE_ACCOUNT }}
+          create_credentials_file: true
+      - name: Deploy backend and rules first
+        run: ./backend/node_modules/.bin/firebase deploy --project "$FIREBASE_PROJECT_ID" --only functions:shepherd,firestore:rules,firestore:indexes --non-interactive
+      - name: Refresh credentials before Hosting
+        uses: google-github-actions/auth@v3
+        with:
+          project_id: ${{ vars.FIREBASE_PROJECT_ID }}
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOY_SERVICE_ACCOUNT }}
+          create_credentials_file: true
+      - name: Publish connected Web app
+        run: ./backend/node_modules/.bin/firebase deploy --project "$FIREBASE_PROJECT_ID" --only hosting --non-interactive
+      - name: Check published revision
+        run: |
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';
+          const url = `https://${process.env.FIREBASE_PROJECT_ID}.web.app`;
+          const response = await fetch(`${url}/version.json?revision=${process.env.GITHUB_SHA}`, {signal: AbortSignal.timeout(30000)});
+          assert.equal(response.status, 200);
+          assert.equal((await response.json()).commit, process.env.GITHUB_SHA);
+          const { appendFileSync } = await import('node:fs');
+          appendFileSync(process.env.GITHUB_STEP_SUMMARY, `Publicado: ${url}\n\nCommit: ${process.env.GITHUB_SHA}\n\nVerificação HTTP concluída. Execute os testes de login, persistência e sigilo do guia para homologar a aplicação.\n`);
+          JS

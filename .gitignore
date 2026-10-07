@@ -9,3 +9,6 @@ app/lib/firebase_options.dart
 *service-account*.json
 app/config/firebase.local.json
 app/.flutter-plugins-dependencies
+
+# Credenciais temporárias geradas pelo GitHub Actions
+gha-creds-*.json

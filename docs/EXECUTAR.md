@@ -4,7 +4,7 @@
 
 - Flutter 3.47.6 / Dart 3.13.5.
 - Node 22 (runtime de Functions) e npm.
-- Java 17 para o emulador Firestore usado pela versão de Firebase CLI travada no projeto.
+- Java 21 para Firebase CLI 15.32.1 (versão travada no projeto).
 
 ## Demonstração visual
 

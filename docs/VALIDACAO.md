@@ -27,3 +27,9 @@ Um resultado de compilação não substitui a validação do login e do App Chec
 - Build Web release de `lib/firebase_main.dart` com configuração de emuladores: aprovado. Isso valida a compilação, não o transporte completo de autenticação/Functions nem a configuração do projeto real.
 - A demonstração final foi compilada com recursos Web locais (`--no-web-resources-cdn`).
 - Total: 33 testes de núcleo + 3 de integração Firestore + 5 de interface = 41 casos aprovados. Os testes de transporte completo em `backend/e2e` não integram essa contagem.
+
+## Integração de deploy — 07/10/2026
+
+- Pipeline de homologação preparado com OIDC, validação do destino, build conectado, deploy seletivo e conferência HTTP da versão. Credenciais/variáveis Google e primeiro deploy ainda pendentes.
+- Firebase CLI atualizada de 14.12.0 para 15.32.1; emuladores agora exigem Java 21. A versão inclui a correção oficial para Functions SDK v7.
+- 5 testes do validador de configuração e 33 testes backend passaram localmente (Node 24.19). O workflow usa Node 22 e Java 21 e agora inclui o E2E de Auth/Functions/Firestore. Conferir a execução remota desta revisão para registrar seu resultado.

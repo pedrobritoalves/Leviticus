@@ -52,7 +52,7 @@ Responsáveis: ENG + PEDRO. Saída: clone limpo reproduz a demonstração e as v
 
 - [x] BASE-00 — Versionar a entrega inicial no GitHub e conferir igualdade do conteúdo local/remoto.
 - [x] BASE-01 — Compilar as entradas Web demonstrativa e Firebase; registrar limitações em `VALIDACAO.md`.
-- [ ] DEV-01 — Instalar Git, Flutter 3.47.6/Dart 3.13.5, Chrome, Node 22 e Java compatível com a CLI travada; registrar `flutter doctor -v` e versões.
+- [ ] DEV-01 — Instalar Git, Flutter 3.47.6/Dart 3.13.5, Chrome, Node 22 e Java 21 compatível com a CLI travada; registrar `flutter doctor -v` e versões.
 - [ ] DEV-02 — Clonar o repositório na máquina de Pedro; executar `npm ci` e `flutter pub get` a partir dos lockfiles.
 - [ ] DEV-03 — Instalar editor e extensões Flutter/Dart; preparar emulador Android e, no Mac, simulador iOS.
 - [ ] DEV-04 — Rodar a demo Web e completar os casos manuais T01–T04 do guia.

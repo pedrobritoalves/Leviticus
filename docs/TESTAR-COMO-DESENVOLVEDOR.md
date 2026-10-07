@@ -16,7 +16,7 @@ Não há URL pública conectada confirmada nem APK/IPA entregue nesta versão. A
 
 ## 2. Preparar a máquina
 
-Instale Git, Chrome, Flutter **3.47.6** (inclui Dart **3.13.5**), Node **22** e Java **17** para a CLI Firebase atualmente travada. Se a CLI for atualizada na tarefa BASE-02, ajuste o requisito Java à versão homologada. Não atualize dependências indiscriminadamente para tentar corrigir um erro.
+Instale Git, Chrome, Flutter **3.47.6** (inclui Dart **3.13.5**), Node **22** e Java **21** para Firebase CLI **15.32.1**, atualmente travada. Se a CLI for atualizada na tarefa BASE-02, ajuste o requisito Java à versão homologada. Não atualize dependências indiscriminadamente para tentar corrigir um erro.
 
 Para Android, acrescente Android Studio/SDK e um emulador. Para iOS, use macOS com Xcode e ferramentas indicadas por `flutter doctor`; Windows pode atender Web e Android, mas o build iOS depende do Mac.
 
